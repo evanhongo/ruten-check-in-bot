@@ -1,0 +1,66 @@
+name: 露天自動打卡
+
+on:
+  workflow_dispatch: ~
+  schedule:
+    - cron:  '1 4 * * *'
+
+jobs:        
+  line-notify:
+    name: Ruten check-in
+    runs-on: ubuntu-latest
+    env:
+      ACCOUNT: ${{ secrets.ACCOUNT }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
+    steps:      
+      - name: Check config
+        if: ${{ github.event_name == 'workflow_dispatch' }}        
+        run: |
+          exit_code=0
+          if [[ -z "$ACCOUNT" ]]; then
+            echo '::error::你沒有設定ACCOUNT 帳號，請再確認一次。'
+            exit_code=87
+          fi
+
+          if [[ -z "$PASSWORD" ]]; then
+            echo '::error::你沒有設定PASSWORD 密碼，請再確認一次。'
+            exit_code=87
+          fi
+
+          if [[ -z "$LINE_NOTIFY_TOKEN" ]]; then
+            echo '::error::你沒有設定LINE_NOTIFY_TOKEN 權杖，請再確認一次。'
+            exit_code=87
+          fi                 
+
+          exit $exit_code
+
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.15.1'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Run script
+        run: pnpm install && pnpm start
