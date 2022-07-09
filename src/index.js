@@ -7,7 +7,7 @@ dotenv.config();
 
 const main = async () => {
   try {        
-    const msg = await checkIn();
+    const msg = await checkIn();    
     await lineNotify(msg);
   }
   catch(err){
