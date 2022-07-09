@@ -14,13 +14,13 @@ const checkIn = async () => {
     let msg;
     if(!btn)
       msg = "今日已打卡";
-    else {
+    else {      
       await btn.click();
       await page.waitForTimeout(5000);
       const titleElemHandleArr = await page.$$('.rt-label.rt-label-pill.rt-label-secondary-solid');
       const todayTitleElemHandle = titleElemHandleArr[titleElemHandleArr.length -1];
       const { title, status } = await page.evaluate(elem => ({title: elem.textContent, status: elem.nextElementSibling.nextElementSibling.nextElementSibling.textContent}), todayTitleElemHandle);      
-      msg = title === "今日" && status === "已領取" ? "打卡成功" : "打卡失敗";
+      msg = (title === "今日" && status === "已領取") ? "打卡成功" : "打卡失敗";
     }
 
     try {

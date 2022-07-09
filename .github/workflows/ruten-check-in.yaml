@@ -3,7 +3,7 @@ name: 露天自動打卡
 on:
   workflow_dispatch: ~
   schedule:
-    - cron:  '1 4 * * *'
+    - cron:  '1 16 * * *'
 
 jobs:        
   line-notify:
