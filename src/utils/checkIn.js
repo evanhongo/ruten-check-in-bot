@@ -10,7 +10,6 @@ const checkIn = async () => {
     await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 100000 });
     await page.goto('https://www.ruten.com.tw/event/daily_mission.php', { waitUntil: 'networkidle0', timeout: 100000 });
     const btn = await page.$('.mission-card-active > button');
-    console.log(btn)
     let msg;
     if(!btn)
       msg = "今日已打卡";
