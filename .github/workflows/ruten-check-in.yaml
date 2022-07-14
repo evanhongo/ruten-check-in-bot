@@ -38,6 +38,14 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
+      - name: Build docker image
+        run: |
+          docker build -t ruten-check-in . 
+
       - name: Create docker container
         run: |
-          docker run --rm --privileged -e ACCOUNT=${{ env.ACCOUNT }} -e PASSWORD=${{ env.PASSWORD }} -e LINE_NOTIFY_TOKEN=${{ env.LINE_NOTIFY_TOKEN }}  evanhongo/ruten-check-in:v1.0.0
+          docker run --rm --privileged -e ACCOUNT=${{ env.ACCOUNT }} -e PASSWORD=${{ env.PASSWORD }} -e LINE_NOTIFY_TOKEN=${{ env.LINE_NOTIFY_TOKEN }}  ruten-check-in
+
+      - name: Remove docker image
+        run: |
+          docker rmi ruten-check-in
