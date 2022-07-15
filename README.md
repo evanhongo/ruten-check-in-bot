@@ -5,7 +5,7 @@
 
 <br/>
 
-## Step2: [設定 Line Notify](https://notify-bot.line.me/my)
+## Step2: [設定 Line Notify](https://notify-bot.line.me/my/)
 
 ![img](img/02.jpg)
 
