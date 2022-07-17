@@ -19,7 +19,17 @@ const checkIn = async () => {
       const titleElemHandleArr = await page.$$('.rt-label.rt-label-pill.rt-label-secondary-solid');
       const todayTitleElemHandle = titleElemHandleArr[titleElemHandleArr.length -1];
       const { title, status } = await page.evaluate(elem => ({title: elem.textContent, status: elem.nextElementSibling.nextElementSibling.nextElementSibling.textContent}), todayTitleElemHandle);      
-      msg = (title === "今日" && ["已領取", "已完成任務"].includes(status)) ? "打卡成功" : "打卡失敗";
+      if(status === "已領取") {
+        if(title === "今日")
+          msg = "打卡成功";
+        else { //第7天
+          const todayTitleElemHandle2 = await page.$('h3.rt-label.rt-label-pill.rt-label-primary-solid');
+          const { title, status } = await page.evaluate(elem => ({title: elem.textContent, status: elem.nextElementSibling.nextElementSibling.nextElementSibling.textContent}), todayTitleElemHandle2);          
+          msg = (title === "今日" && status === "已完成任務") ? "打卡成功" : "打卡失敗";
+        }
+      }
+      else
+        msg = "打卡失敗";
     }
 
     try {
